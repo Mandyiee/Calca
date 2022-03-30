@@ -1,71 +1,102 @@
-let input1 = document.getElementById("History");
-let input2 = document.getElementById("Result");
-var nums = document.getElementById("numbers");
-var operators = document.getElementById("operators");
+let firstValue = ""
+let secondValue = ""
+let displayCon = document.querySelector('.display')
+let resultCon = document.querySelector('.result')
+let numbers = document.querySelectorAll('.number')
+let symbols = document.querySelectorAll('.symbol')
+const allSymbols = ['+', '-', '&times;', '÷', '%', ]
 
-function evaluate(inp) {
-    let final = checkInput(inp)
-    if(inp.length = 0){
-      input2.value = ' ';
-    }else {
-      input2.value = final;
+function cal() {
+  let string3 = displayCon.innerText
+  let string2 = string3.replace(/÷/g, '/')
+  let string1 = string2.replace(/×/g, '*')
+  let string = string1.replace(/%/g, '*0.01')
+  resultCon.innerText = eval(string).toLocaleString()
+}
+
+function calculate() {
+  resultCon.innerText = ''
+  
+  let string3 = displayCon.innerText
+  let string2 = string3.replace(/÷/g, '/')
+  let string1 = string2.replace(/×/g, '*')
+  let string = string1.replace(/%/g, '*0.01')
+  displayCon.innerText = eval(string)
+}
+numbers.forEach(item => {
+  item.addEventListener('click', () => {
+
+
+    if (displayCon.innerText.charAt(displayCon.innerText.length - 1) == '-') {
+      displayCon.innerText += item.innerText
+      cal()
+    } else if ((displayCon.innerText.charAt(displayCon.innerText.length - 1) == '-') || displayCon.innerText.includes('-')) {
+      displayCon.innerText += item.innerText
+      cal()
+    } else if (displayCon.innerText.charAt(displayCon.innerText.length - 1) == '÷' || displayCon.innerText.includes('÷')) {
+      displayCon.innerText += item.innerText
+      cal()
+
+    } else if (displayCon.innerText.charAt(displayCon.innerText.length - 1) == '×' || displayCon.innerText.includes('×')) {
+      displayCon.innerText += item.innerText
+      cal()
+
+    } else if (displayCon.innerText.charAt(displayCon.innerText.length - 1) == '+' || displayCon.innerText.includes('+')) {
+      displayCon.innerText += item.innerText
+      cal()
+
     }
-}
+    else {
 
-var figures = ["7", "8", "9", "4", "5", "6", "1", "2", "3", ".", "0", "="]
-for (let x = 0; x < figures.length; x++) {
-  var keys = document.createElement("input");
-  keys.setAttribute("type", "button")
-  keys.classList.add("tabs")
-  keys.value = figures[x]
-  nums.appendChild(keys)
-}
-
-var tabs = document.querySelectorAll(".tabs");
-
-tabs.forEach(function(element) {
-  element.addEventListener("click", function() {
-    if (element.value == "=") {
-      evaluate(input1.value);
-      
-    } else {
-      input1.value += element.value
-      evaluate(input1.value);
-    }
-    
-  })
-});
-var operator = ["Del", "/", "*", "-", "+"];
-for (var i = 0; i < operator.length; i++) {
-  var operate = document.createElement("input");
-  operate.value = operator[i];
-  operate.classList.add("tabOperate")
-  operate.setAttribute("type", "button")
-  operators.appendChild(operate);
-}
-var operateTab = document.querySelectorAll(".tabOperate")
-operateTab.forEach((item) => {
-  item.addEventListener("click", () => {
-    if(item.value == "Del"){
- input1.value = (input1.value).slice(0,-1);
- input2.value = ' ';
-    }  else {
-         input1.value += item.value
-      
-    
+      displayCon.innerText += item.innerText
+      firstValue += item.innerText
     }
   })
 })
 
-const checkInput = (answer) => {
-  
-  
-  answer = answer.toLocaleString()
-  try {
-  let  a = eval(answer);
-  return a.toLocaleString();
-  }
-  catch (err) {
-    return "NaN"
-  }
-}
+
+symbols.forEach(item => {
+  item.addEventListener('click', () => {
+    if (item.innerText =='×' && displayCon.innerText.length == 0) {
+      
+      displayCon.innerText += ''
+    } else if (item.innerText =='÷' && displayCon.innerText.length == 0) {
+      
+      displayCon.innerText += ''
+    } else if (item.innerText == "C") {
+      displayCon.innerText = displayCon.innerText.slice(0, -1)
+      resultCon.innerText = ""
+    } else if (item.innerText == "CE") {
+      displayCon.innerText = ""
+      resultCon.innerText = ""
+    } else if (displayCon.innerText.charAt(displayCon.innerText.length - 1) == '-') {
+      displayCon.innerText = displayCon.innerText.slice(0, -1)
+      resultCon.innerText = ""
+      displayCon.innerText += item.innerText
+    } else if (displayCon.innerText.charAt(displayCon.innerText.length - 1) == '+') {
+      displayCon.innerText = displayCon.innerText.slice(0, -1)
+      displayCon.innerText += item.innerText
+    } else if (displayCon.innerText.charAt(displayCon.innerText.length - 1) == '÷') {
+      displayCon.innerText = displayCon.innerText.slice(0, -1)
+      displayCon.innerText += item.innerText
+    } else if (displayCon.innerText.charAt(displayCon.innerText.length - 1) == '×'){
+      displayCon.innerText = displayCon.innerText.slice(0, -1)
+      displayCon.innerText += item.innerText
+    } else if (item.innerText == '=') {
+      calculate()
+    } else if (displayCon.innerText.charAt(displayCon.innerText.length - 1) == '%') {
+      if (item.innerText == '%') {
+        displayCon.innerText += ""
+      } else {
+        displayCon.innerText += item.innerText
+      }
+    } else if (displayCon.innerText.charAt(displayCon.innerText.length - 1) == '.') {
+      displayCon.innerText = displayCon.innerText.slice(0, -1)
+      displayCon.innerText += item.innerText
+    }
+    else {
+      displayCon.innerText += item.innerText
+    }
+
+  })
+})
